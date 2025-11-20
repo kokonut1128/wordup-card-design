@@ -14,15 +14,15 @@ const Flashcards = () => {
   const [editingCard, setEditingCard] = useState<Flashcard | null>(null);
   const { toast } = useToast();
 
-  const handleSubmit = (front: string, back: string) => {
+  const handleSubmit = (front: string, back: string, data?: Partial<Flashcard>) => {
     if (editingCard) {
-      updateFlashcard(editingCard.id, front, back);
+      updateFlashcard(editingCard.id, front, back, data);
       toast({
         title: '更新成功',
         description: '單字卡已更新',
       });
     } else {
-      addFlashcard(front, back);
+      addFlashcard(front, back, data);
       toast({
         title: '新增成功',
         description: '單字卡已建立',
