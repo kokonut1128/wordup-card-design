@@ -14,7 +14,110 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      flashcards: {
+        Row: {
+          antonyms: string[] | null
+          back: string
+          chinese_definition: string | null
+          created_at: string
+          english_definition: string | null
+          example_sentence_1: string | null
+          example_sentence_2: string | null
+          example_sentence_3: string | null
+          example_translation_1: string | null
+          example_translation_2: string | null
+          example_translation_3: string | null
+          front: string
+          id: string
+          image_url: string | null
+          phonetic: string | null
+          related_words: string[] | null
+          synonyms: string[] | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          antonyms?: string[] | null
+          back: string
+          chinese_definition?: string | null
+          created_at?: string
+          english_definition?: string | null
+          example_sentence_1?: string | null
+          example_sentence_2?: string | null
+          example_sentence_3?: string | null
+          example_translation_1?: string | null
+          example_translation_2?: string | null
+          example_translation_3?: string | null
+          front: string
+          id?: string
+          image_url?: string | null
+          phonetic?: string | null
+          related_words?: string[] | null
+          synonyms?: string[] | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          antonyms?: string[] | null
+          back?: string
+          chinese_definition?: string | null
+          created_at?: string
+          english_definition?: string | null
+          example_sentence_1?: string | null
+          example_sentence_2?: string | null
+          example_sentence_3?: string | null
+          example_translation_1?: string | null
+          example_translation_2?: string | null
+          example_translation_3?: string | null
+          front?: string
+          id?: string
+          image_url?: string | null
+          phonetic?: string | null
+          related_words?: string[] | null
+          synonyms?: string[] | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_flashcard_progress: {
+        Row: {
+          created_at: string
+          flashcard_id: string
+          id: string
+          is_learned: boolean
+          last_reviewed: string | null
+          review_count: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          flashcard_id: string
+          id?: string
+          is_learned?: boolean
+          last_reviewed?: string | null
+          review_count?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          flashcard_id?: string
+          id?: string
+          is_learned?: boolean
+          last_reviewed?: string | null
+          review_count?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_flashcard_progress_flashcard_id_fkey"
+            columns: ["flashcard_id"]
+            isOneToOne: false
+            referencedRelation: "flashcards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
