@@ -15,6 +15,9 @@ export interface Flashcard {
   exampleTranslation2?: string;
   exampleSentence3?: string;
   exampleTranslation3?: string;
+  exampleSource1?: string;
+  exampleSource2?: string;
+  exampleSource3?: string;
   createdAt: number;
   lastReviewed?: number;
 }

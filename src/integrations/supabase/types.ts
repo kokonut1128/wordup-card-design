@@ -24,6 +24,9 @@ export type Database = {
           example_sentence_1: string | null
           example_sentence_2: string | null
           example_sentence_3: string | null
+          example_source_1: string | null
+          example_source_2: string | null
+          example_source_3: string | null
           example_translation_1: string | null
           example_translation_2: string | null
           example_translation_3: string | null
@@ -45,6 +48,9 @@ export type Database = {
           example_sentence_1?: string | null
           example_sentence_2?: string | null
           example_sentence_3?: string | null
+          example_source_1?: string | null
+          example_source_2?: string | null
+          example_source_3?: string | null
           example_translation_1?: string | null
           example_translation_2?: string | null
           example_translation_3?: string | null
@@ -66,6 +72,9 @@ export type Database = {
           example_sentence_1?: string | null
           example_sentence_2?: string | null
           example_sentence_3?: string | null
+          example_source_1?: string | null
+          example_source_2?: string | null
+          example_source_3?: string | null
           example_translation_1?: string | null
           example_translation_2?: string | null
           example_translation_3?: string | null

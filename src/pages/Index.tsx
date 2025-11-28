@@ -77,55 +77,20 @@ const Index = () => {
         .select('*')
         .eq('user_id', user?.id)
         .ilike('front', searchTerm.trim())
-        .single();
+        .maybeSingle();
 
       if (existingCard) {
-        // Show card from database
-        toast({
-          title: '找到單字卡',
-          description: `${existingCard.front}: ${existingCard.back}`,
-        });
-        navigate('/flashcards');
+        // Word exists, navigate to detail page
+        navigate(`/word/${encodeURIComponent(searchTerm.trim())}`);
         return;
       }
 
-      // If not found, fetch from API
-      const { data: functionData, error: functionError } = await supabase.functions.invoke('fetch-word-info', {
-        body: { word: searchTerm.trim() }
+      // Word doesn't exist, navigate to flashcards page to create new
+      navigate('/flashcards');
+      toast({
+        title: '新增單字',
+        description: `找不到 "${searchTerm}"，請建立新的單字卡`,
       });
-
-      if (functionError) throw functionError;
-
-      if (functionData) {
-        // Save to database
-        const { error: insertError } = await supabase
-          .from('flashcards')
-          .insert({
-            user_id: user?.id,
-            front: searchTerm.trim(),
-            back: functionData.chineseDefinition || '',
-            phonetic: functionData.phonetic,
-            chinese_definition: functionData.chineseDefinition,
-            english_definition: functionData.englishDefinition,
-            synonyms: functionData.synonyms,
-            antonyms: functionData.antonyms,
-            related_words: functionData.relatedWords,
-            example_sentence_1: functionData.exampleSentence1,
-            example_translation_1: functionData.exampleTranslation1,
-            example_sentence_2: functionData.exampleSentence2,
-            example_translation_2: functionData.exampleTranslation2,
-            example_sentence_3: functionData.exampleSentence3,
-            example_translation_3: functionData.exampleTranslation3,
-          });
-
-        if (insertError) throw insertError;
-
-        toast({
-          title: '已新增單字卡',
-          description: '單字卡已自動建立並儲存',
-        });
-        navigate('/flashcards');
-      }
     } catch (error: any) {
       console.error('Search error:', error);
       toast({
