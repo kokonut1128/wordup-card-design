@@ -70,6 +70,7 @@ const Flashcards = () => {
         exampleSentence3: card.example_sentence_3,
         exampleTranslation3: card.example_translation_3,
         exampleSource3: card.example_source_3,
+        isFavorite: card.is_favorite,
         createdAt: new Date(card.created_at).getTime(),
       }));
 

@@ -18,6 +18,7 @@ export interface Flashcard {
   exampleSource1?: string;
   exampleSource2?: string;
   exampleSource3?: string;
+  isFavorite?: boolean;
   createdAt: number;
   lastReviewed?: number;
 }
