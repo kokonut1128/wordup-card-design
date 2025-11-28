@@ -63,10 +63,13 @@ const Flashcards = () => {
         imageUrl: card.image_url,
         exampleSentence1: card.example_sentence_1,
         exampleTranslation1: card.example_translation_1,
+        exampleSource1: card.example_source_1,
         exampleSentence2: card.example_sentence_2,
         exampleTranslation2: card.example_translation_2,
+        exampleSource2: card.example_source_2,
         exampleSentence3: card.example_sentence_3,
         exampleTranslation3: card.example_translation_3,
+        exampleSource3: card.example_source_3,
         createdAt: new Date(card.created_at).getTime(),
       }));
 
@@ -100,12 +103,15 @@ const Flashcards = () => {
             antonyms: additionalData?.antonyms,
             related_words: additionalData?.relatedWords,
             image_url: additionalData?.imageUrl,
-            example_sentence_1: additionalData?.exampleSentence1,
-            example_translation_1: additionalData?.exampleTranslation1,
-            example_sentence_2: additionalData?.exampleSentence2,
-            example_translation_2: additionalData?.exampleTranslation2,
-            example_sentence_3: additionalData?.exampleSentence3,
-            example_translation_3: additionalData?.exampleTranslation3,
+        example_sentence_1: additionalData?.exampleSentence1,
+        example_translation_1: additionalData?.exampleTranslation1,
+        example_source_1: additionalData?.exampleSource1,
+        example_sentence_2: additionalData?.exampleSentence2,
+        example_translation_2: additionalData?.exampleTranslation2,
+        example_source_2: additionalData?.exampleSource2,
+        example_sentence_3: additionalData?.exampleSentence3,
+        example_translation_3: additionalData?.exampleTranslation3,
+        example_source_3: additionalData?.exampleSource3,
           })
           .eq('id', editingCard.id)
           .eq('user_id', user.id);
@@ -132,10 +138,13 @@ const Flashcards = () => {
             image_url: additionalData?.imageUrl,
             example_sentence_1: additionalData?.exampleSentence1,
             example_translation_1: additionalData?.exampleTranslation1,
+            example_source_1: additionalData?.exampleSource1,
             example_sentence_2: additionalData?.exampleSentence2,
             example_translation_2: additionalData?.exampleTranslation2,
+            example_source_2: additionalData?.exampleSource2,
             example_sentence_3: additionalData?.exampleSentence3,
             example_translation_3: additionalData?.exampleTranslation3,
+            example_source_3: additionalData?.exampleSource3,
           });
 
         if (error) throw error;
