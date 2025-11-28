@@ -33,6 +33,7 @@ export type Database = {
           front: string
           id: string
           image_url: string | null
+          is_favorite: boolean
           phonetic: string | null
           related_words: string[] | null
           synonyms: string[] | null
@@ -57,6 +58,7 @@ export type Database = {
           front: string
           id?: string
           image_url?: string | null
+          is_favorite?: boolean
           phonetic?: string | null
           related_words?: string[] | null
           synonyms?: string[] | null
@@ -81,6 +83,7 @@ export type Database = {
           front?: string
           id?: string
           image_url?: string | null
+          is_favorite?: boolean
           phonetic?: string | null
           related_words?: string[] | null
           synonyms?: string[] | null

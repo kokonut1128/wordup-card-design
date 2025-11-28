@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Edit, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Edit, ExternalLink, Star, Volume2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Flashcard } from '@/types/flashcard';
 
@@ -60,6 +60,7 @@ const WordDetail = () => {
           exampleSentence3: data.example_sentence_3,
           exampleTranslation3: data.example_translation_3,
           exampleSource3: data.example_source_3,
+          isFavorite: data.is_favorite,
           createdAt: new Date(data.created_at).getTime(),
         };
         setFlashcard(formattedData);
@@ -73,6 +74,43 @@ const WordDetail = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePronunciation = () => {
+    if (!flashcard) return;
+    
+    const utterance = new SpeechSynthesisUtterance(flashcard.front);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const handleToggleFavorite = async () => {
+    if (!flashcard) return;
+
+    try {
+      const newFavoriteStatus = !flashcard.isFavorite;
+      
+      const { error } = await supabase
+        .from('flashcards')
+        .update({ is_favorite: newFavoriteStatus })
+        .eq('id', flashcard.id);
+
+      if (error) throw error;
+
+      setFlashcard({ ...flashcard, isFavorite: newFavoriteStatus });
+      toast({
+        title: newFavoriteStatus ? '已加入收藏' : '已取消收藏',
+        description: newFavoriteStatus ? '單字已標記為重要' : '已移除收藏標記',
+      });
+    } catch (error: any) {
+      console.error('Error toggling favorite:', error);
+      toast({
+        variant: 'destructive',
+        title: '操作失敗',
+        description: error.message,
+      });
     }
   };
 
@@ -109,7 +147,20 @@ const WordDetail = () => {
             返回首頁
           </Button>
           <h1 className="text-xl font-bold">單字詳情</h1>
-          <div className="w-20" />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleToggleFavorite}
+            className="relative"
+          >
+            <Star
+              className={`h-5 w-5 ${
+                flashcard.isFavorite
+                  ? 'fill-yellow-400 text-yellow-400'
+                  : 'text-muted-foreground'
+              }`}
+            />
+          </Button>
         </div>
       </header>
 
@@ -118,9 +169,24 @@ const WordDetail = () => {
           <CardHeader>
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <CardTitle className="text-4xl mb-2">{flashcard.front}</CardTitle>
+                <div className="flex items-center gap-3 mb-2">
+                  <CardTitle className="text-4xl">{flashcard.front}</CardTitle>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handlePronunciation}
+                    className="hover:bg-accent"
+                  >
+                    <Volume2 className="h-5 w-5 text-primary" />
+                  </Button>
+                </div>
                 {flashcard.phonetic && (
-                  <p className="text-lg text-muted-foreground">{flashcard.phonetic}</p>
+                  <button
+                    onClick={handlePronunciation}
+                    className="text-lg text-muted-foreground hover:text-primary cursor-pointer transition-colors"
+                  >
+                    {flashcard.phonetic}
+                  </button>
                 )}
               </div>
             </div>

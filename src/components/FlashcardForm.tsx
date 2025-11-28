@@ -31,10 +31,13 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
   const [imageUrl, setImageUrl] = useState('');
   const [exampleSentence1, setExampleSentence1] = useState('');
   const [exampleTranslation1, setExampleTranslation1] = useState('');
+  const [exampleSource1, setExampleSource1] = useState('');
   const [exampleSentence2, setExampleSentence2] = useState('');
   const [exampleTranslation2, setExampleTranslation2] = useState('');
+  const [exampleSource2, setExampleSource2] = useState('');
   const [exampleSentence3, setExampleSentence3] = useState('');
   const [exampleTranslation3, setExampleTranslation3] = useState('');
+  const [exampleSource3, setExampleSource3] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -50,10 +53,13 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
       setImageUrl(editCard.imageUrl || '');
       setExampleSentence1(editCard.exampleSentence1 || '');
       setExampleTranslation1(editCard.exampleTranslation1 || '');
+      setExampleSource1(editCard.exampleSource1 || '');
       setExampleSentence2(editCard.exampleSentence2 || '');
       setExampleTranslation2(editCard.exampleTranslation2 || '');
+      setExampleSource2(editCard.exampleSource2 || '');
       setExampleSentence3(editCard.exampleSentence3 || '');
       setExampleTranslation3(editCard.exampleTranslation3 || '');
+      setExampleSource3(editCard.exampleSource3 || '');
     } else {
       setFront('');
       setBack('');
@@ -66,10 +72,13 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
       setImageUrl('');
       setExampleSentence1('');
       setExampleTranslation1('');
+      setExampleSource1('');
       setExampleSentence2('');
       setExampleTranslation2('');
+      setExampleSource2('');
       setExampleSentence3('');
       setExampleTranslation3('');
+      setExampleSource3('');
     }
   }, [editCard, open]);
 
@@ -94,10 +103,13 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
         setRelatedWords(data.relatedWords?.join(', ') || '');
         setExampleSentence1(data.exampleSentence1 || '');
         setExampleTranslation1(data.exampleTranslation1 || '');
+        setExampleSource1(data.exampleSource1 || '');
         setExampleSentence2(data.exampleSentence2 || '');
         setExampleTranslation2(data.exampleTranslation2 || '');
+        setExampleSource2(data.exampleSource2 || '');
         setExampleSentence3(data.exampleSentence3 || '');
         setExampleTranslation3(data.exampleTranslation3 || '');
+        setExampleSource3(data.exampleSource3 || '');
       }
     } catch (error) {
       console.error('自動填充失敗:', error);
@@ -119,10 +131,13 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
         imageUrl: imageUrl.trim() || undefined,
         exampleSentence1: exampleSentence1.trim() || undefined,
         exampleTranslation1: exampleTranslation1.trim() || undefined,
+        exampleSource1: exampleSource1.trim() || undefined,
         exampleSentence2: exampleSentence2.trim() || undefined,
         exampleTranslation2: exampleTranslation2.trim() || undefined,
+        exampleSource2: exampleSource2.trim() || undefined,
         exampleSentence3: exampleSentence3.trim() || undefined,
         exampleTranslation3: exampleTranslation3.trim() || undefined,
+        exampleSource3: exampleSource3.trim() || undefined,
       };
       onSubmit(front.trim(), back.trim(), additionalData);
       onOpenChange(false);
@@ -267,6 +282,17 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="exampleSource1">例句 1 來源 URL</Label>
+              <Input
+                id="exampleSource1"
+                value={exampleSource1}
+                onChange={(e) => setExampleSource1(e.target.value)}
+                placeholder="輸入例句來源網址"
+                type="url"
+              />
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="exampleSentence2">例句 2</Label>
               <Textarea
                 id="exampleSentence2"
@@ -289,6 +315,17 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="exampleSource2">例句 2 來源 URL</Label>
+              <Input
+                id="exampleSource2"
+                value={exampleSource2}
+                onChange={(e) => setExampleSource2(e.target.value)}
+                placeholder="輸入例句來源網址"
+                type="url"
+              />
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="exampleSentence3">例句 3</Label>
               <Textarea
                 id="exampleSentence3"
@@ -307,6 +344,17 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
                 onChange={(e) => setExampleTranslation3(e.target.value)}
                 placeholder="輸入中文翻譯"
                 rows={2}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="exampleSource3">例句 3 來源 URL</Label>
+              <Input
+                id="exampleSource3"
+                value={exampleSource3}
+                onChange={(e) => setExampleSource3(e.target.value)}
+                placeholder="輸入例句來源網址"
+                type="url"
               />
             </div>
           </div>
