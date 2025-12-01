@@ -61,6 +61,8 @@ const WordDetail = () => {
           exampleTranslation3: data.example_translation_3,
           exampleSource3: data.example_source_3,
           isFavorite: data.is_favorite,
+          tags: data.tags,
+          difficultyLevel: data.difficulty_level,
           createdAt: new Date(data.created_at).getTime(),
         };
         setFlashcard(formattedData);
@@ -193,6 +195,23 @@ const WordDetail = () => {
           </CardHeader>
 
           <CardContent className="space-y-6">
+            {(flashcard.tags && flashcard.tags.length > 0) || flashcard.difficultyLevel && (
+              <div className="flex flex-wrap gap-2 items-center">
+                {flashcard.difficultyLevel && (
+                  <Badge variant="default">
+                    {flashcard.difficultyLevel === 'beginner' && '初級'}
+                    {flashcard.difficultyLevel === 'intermediate' && '中級'}
+                    {flashcard.difficultyLevel === 'advanced' && '高級'}
+                  </Badge>
+                )}
+                {flashcard.tags && flashcard.tags.map((tag, index) => (
+                  <Badge key={index} variant="secondary">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            )}
+
             {flashcard.imageUrl && (
               <div className="rounded-lg overflow-hidden">
                 <img 
