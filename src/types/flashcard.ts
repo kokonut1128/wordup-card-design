@@ -19,6 +19,8 @@ export interface Flashcard {
   exampleSource2?: string;
   exampleSource3?: string;
   isFavorite?: boolean;
+  tags?: string[];
+  difficultyLevel?: string;
   createdAt: number;
   lastReviewed?: number;
 }

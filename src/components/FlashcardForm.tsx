@@ -38,7 +38,16 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
   const [exampleSentence3, setExampleSentence3] = useState('');
   const [exampleTranslation3, setExampleTranslation3] = useState('');
   const [exampleSource3, setExampleSource3] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
+  const [difficultyLevel, setDifficultyLevel] = useState('intermediate');
   const [isLoading, setIsLoading] = useState(false);
+
+  const availableTags = ['商業', '旅遊', '日常', '學術', '科技', '醫療', '法律', '娛樂'];
+  const difficultyLevels = [
+    { value: 'beginner', label: '初級' },
+    { value: 'intermediate', label: '中級' },
+    { value: 'advanced', label: '高級' },
+  ];
 
   useEffect(() => {
     if (editCard) {
@@ -60,6 +69,8 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
       setExampleSentence3(editCard.exampleSentence3 || '');
       setExampleTranslation3(editCard.exampleTranslation3 || '');
       setExampleSource3(editCard.exampleSource3 || '');
+      setTags(editCard.tags || []);
+      setDifficultyLevel(editCard.difficultyLevel || 'intermediate');
     } else {
       setFront('');
       setBack('');
@@ -79,6 +90,8 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
       setExampleSentence3('');
       setExampleTranslation3('');
       setExampleSource3('');
+      setTags([]);
+      setDifficultyLevel('intermediate');
     }
   }, [editCard, open]);
 
@@ -138,6 +151,8 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
         exampleSentence3: exampleSentence3.trim() || undefined,
         exampleTranslation3: exampleTranslation3.trim() || undefined,
         exampleSource3: exampleSource3.trim() || undefined,
+        tags: tags.length > 0 ? tags : undefined,
+        difficultyLevel: difficultyLevel,
       };
       onSubmit(front.trim(), back.trim(), additionalData);
       onOpenChange(false);
@@ -216,6 +231,46 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
                 rows={2}
                 required
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label>主題標籤</Label>
+              <div className="flex flex-wrap gap-2">
+                {availableTags.map((tag) => (
+                  <Button
+                    key={tag}
+                    type="button"
+                    variant={tags.includes(tag) ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => {
+                      setTags(prev =>
+                        prev.includes(tag)
+                          ? prev.filter(t => t !== tag)
+                          : [...prev, tag]
+                      );
+                    }}
+                  >
+                    {tag}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>難度等級</Label>
+              <div className="flex gap-2">
+                {difficultyLevels.map((level) => (
+                  <Button
+                    key={level.value}
+                    type="button"
+                    variant={difficultyLevel === level.value ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setDifficultyLevel(level.value)}
+                  >
+                    {level.label}
+                  </Button>
+                ))}
+              </div>
             </div>
 
             <div className="space-y-2">

@@ -20,6 +20,7 @@ export type Database = {
           back: string
           chinese_definition: string | null
           created_at: string
+          difficulty_level: string | null
           english_definition: string | null
           example_sentence_1: string | null
           example_sentence_2: string | null
@@ -37,6 +38,7 @@ export type Database = {
           phonetic: string | null
           related_words: string[] | null
           synonyms: string[] | null
+          tags: string[] | null
           updated_at: string
           user_id: string | null
         }
@@ -45,6 +47,7 @@ export type Database = {
           back: string
           chinese_definition?: string | null
           created_at?: string
+          difficulty_level?: string | null
           english_definition?: string | null
           example_sentence_1?: string | null
           example_sentence_2?: string | null
@@ -62,6 +65,7 @@ export type Database = {
           phonetic?: string | null
           related_words?: string[] | null
           synonyms?: string[] | null
+          tags?: string[] | null
           updated_at?: string
           user_id?: string | null
         }
@@ -70,6 +74,7 @@ export type Database = {
           back?: string
           chinese_definition?: string | null
           created_at?: string
+          difficulty_level?: string | null
           english_definition?: string | null
           example_sentence_1?: string | null
           example_sentence_2?: string | null
@@ -87,6 +92,7 @@ export type Database = {
           phonetic?: string | null
           related_words?: string[] | null
           synonyms?: string[] | null
+          tags?: string[] | null
           updated_at?: string
           user_id?: string | null
         }

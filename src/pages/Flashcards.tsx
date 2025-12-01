@@ -4,7 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { FlashcardForm } from '@/components/FlashcardForm';
 import { FlashcardList } from '@/components/FlashcardList';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, LogOut, Plus, GraduationCap } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { ArrowLeft, LogOut, Plus, GraduationCap, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Flashcard } from '@/types/flashcard';
 import { useToast } from '@/hooks/use-toast';
@@ -17,6 +18,16 @@ const Flashcards = () => {
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingCard, setEditingCard] = useState<Flashcard | null>(null);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('');
+  const [showFilters, setShowFilters] = useState(false);
+
+  const availableTags = ['商業', '旅遊', '日常', '學術', '科技', '醫療', '法律', '娛樂'];
+  const difficultyLevels = [
+    { value: 'beginner', label: '初級' },
+    { value: 'intermediate', label: '中級' },
+    { value: 'advanced', label: '高級' },
+  ];
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -71,6 +82,8 @@ const Flashcards = () => {
         exampleTranslation3: card.example_translation_3,
         exampleSource3: card.example_source_3,
         isFavorite: card.is_favorite,
+        tags: card.tags,
+        difficultyLevel: card.difficulty_level,
         createdAt: new Date(card.created_at).getTime(),
       }));
 
@@ -113,6 +126,8 @@ const Flashcards = () => {
         example_sentence_3: additionalData?.exampleSentence3,
         example_translation_3: additionalData?.exampleTranslation3,
         example_source_3: additionalData?.exampleSource3,
+            tags: additionalData?.tags,
+            difficulty_level: additionalData?.difficultyLevel,
           })
           .eq('id', editingCard.id)
           .eq('user_id', user.id);
@@ -146,6 +161,8 @@ const Flashcards = () => {
             example_sentence_3: additionalData?.exampleSentence3,
             example_translation_3: additionalData?.exampleTranslation3,
             example_source_3: additionalData?.exampleSource3,
+            tags: additionalData?.tags,
+            difficulty_level: additionalData?.difficultyLevel,
           });
 
         if (error) throw error;
@@ -249,6 +266,10 @@ const Flashcards = () => {
             建立和管理你的學習單字卡
           </p>
           <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setShowFilters(!showFilters)}>
+              <Filter className="h-4 w-4 mr-2" />
+              篩選
+            </Button>
             <Button onClick={() => setIsFormOpen(true)}>
               <Plus className="h-4 w-4 mr-2" />
               新增單字卡
@@ -264,8 +285,78 @@ const Flashcards = () => {
           </div>
         </div>
 
+        {showFilters && (
+          <div className="mb-6 p-4 border rounded-lg space-y-4">
+            <div>
+              <h3 className="font-semibold mb-2">主題標籤</h3>
+              <div className="flex flex-wrap gap-2">
+                {availableTags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant={selectedTags.includes(tag) ? "default" : "outline"}
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setSelectedTags(prev =>
+                        prev.includes(tag)
+                          ? prev.filter(t => t !== tag)
+                          : [...prev, tag]
+                      );
+                    }}
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">難度等級</h3>
+              <div className="flex gap-2">
+                {difficultyLevels.map((level) => (
+                  <Badge
+                    key={level.value}
+                    variant={selectedDifficulty === level.value ? "default" : "outline"}
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setSelectedDifficulty(prev =>
+                        prev === level.value ? '' : level.value
+                      );
+                    }}
+                  >
+                    {level.label}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+            {(selectedTags.length > 0 || selectedDifficulty) && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setSelectedTags([]);
+                  setSelectedDifficulty('');
+                }}
+              >
+                清除篩選
+              </Button>
+            )}
+          </div>
+        )}
+
         <FlashcardList
-          flashcards={flashcards}
+          flashcards={flashcards.filter(card => {
+            // Filter by tags
+            if (selectedTags.length > 0) {
+              const cardTags = card.tags || [];
+              if (!selectedTags.some(tag => cardTags.includes(tag))) {
+                return false;
+              }
+            }
+            // Filter by difficulty
+            if (selectedDifficulty && card.difficultyLevel !== selectedDifficulty) {
+              return false;
+            }
+            return true;
+          })}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
