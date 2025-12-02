@@ -70,8 +70,15 @@ Respond ONLY with valid JSON, no additional text.`
       throw new Error('No content in AI response');
     }
 
+    // Clean up markdown code blocks if present
+    let cleanedContent = content.trim();
+    if (cleanedContent.startsWith('```')) {
+      // Remove opening ```json or ``` and closing ```
+      cleanedContent = cleanedContent.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
+    }
+
     // Parse the JSON response from AI
-    const wordInfo = JSON.parse(content);
+    const wordInfo = JSON.parse(cleanedContent);
 
     console.log('Successfully fetched word info');
 
