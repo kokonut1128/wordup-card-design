@@ -100,6 +100,7 @@ export type Database = {
       }
       user_flashcard_progress: {
         Row: {
+          correct_streak: number
           created_at: string
           flashcard_id: string
           id: string
@@ -109,6 +110,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          correct_streak?: number
           created_at?: string
           flashcard_id: string
           id?: string
@@ -118,6 +120,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          correct_streak?: number
           created_at?: string
           flashcard_id?: string
           id?: string
