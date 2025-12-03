@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Search, BookOpen, ShoppingCart, Newspaper, LogOut, Library } from 'lucide-react';
+import { Search, BookOpen, ShoppingCart, Newspaper, LogOut, Library, Play, ClipboardList } from 'lucide-react';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -170,6 +170,25 @@ const Index = () => {
             <CardContent>
               <div className="text-3xl font-bold text-muted-foreground">{unlearnedCount}</div>
             </CardContent>
+          </Card>
+        </div>
+
+        {/* Learning Actions */}
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-primary/20 bg-primary/5" onClick={() => navigate('/review')}>
+            <CardHeader>
+              <Play className="h-10 w-10 text-primary mb-2" />
+              <CardTitle>複習模式</CardTitle>
+              <CardDescription>TTS 發音播放例句，支援單句或全部例句播放</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-primary/20 bg-primary/5" onClick={() => navigate('/quiz')}>
+            <CardHeader>
+              <ClipboardList className="h-10 w-10 text-primary mb-2" />
+              <CardTitle>測驗模式</CardTitle>
+              <CardDescription>填空題四選一，連續答對後移至熟悉單字本</CardDescription>
+            </CardHeader>
           </Card>
         </div>
 
