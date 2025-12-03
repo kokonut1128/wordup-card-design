@@ -42,35 +42,26 @@ const Review = () => {
         return;
       }
 
-      // Get flashcards that are not learned (生字單字本)
-      const { data: progressData, error: progressError } = await supabase
+      // Get all flashcards first
+      const { data: allFlashcards, error: flashcardsError } = await supabase
+        .from('flashcards')
+        .select('*');
+
+      if (flashcardsError) throw flashcardsError;
+
+      // Get learned flashcard IDs for this user
+      const { data: learnedProgress } = await supabase
         .from('user_flashcard_progress')
         .select('flashcard_id')
         .eq('user_id', user.id)
-        .eq('is_learned', false);
+        .eq('is_learned', true);
 
-      if (progressError) throw progressError;
+      const learnedIds = new Set(learnedProgress?.map(p => p.flashcard_id) || []);
 
-      const flashcardIds = progressData?.map(p => p.flashcard_id) || [];
-
-      if (flashcardIds.length === 0) {
-        // If no progress records, get all user's flashcards
-        const { data: allFlashcards, error: allError } = await supabase
-          .from('flashcards')
-          .select('*')
-          .eq('user_id', user.id);
-
-        if (allError) throw allError;
-        setFlashcards(allFlashcards || []);
-      } else {
-        const { data: flashcardsData, error: flashcardsError } = await supabase
-          .from('flashcards')
-          .select('*')
-          .in('id', flashcardIds);
-
-        if (flashcardsError) throw flashcardsError;
-        setFlashcards(flashcardsData || []);
-      }
+      // Filter out learned flashcards (show only 生字單字本)
+      const unlearnedFlashcards = (allFlashcards || []).filter(f => !learnedIds.has(f.id));
+      
+      setFlashcards(unlearnedFlashcards);
     } catch (error) {
       console.error('Error fetching flashcards:', error);
       toast({
