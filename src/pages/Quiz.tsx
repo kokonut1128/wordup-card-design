@@ -48,35 +48,26 @@ const Quiz = () => {
         return;
       }
 
-      // Get flashcards that are not learned
-      const { data: progressData } = await supabase
+      // Get all flashcards first
+      const { data: allFlashcards, error: flashcardsError } = await supabase
+        .from('flashcards')
+        .select('id, front, example_sentence_1, example_translation_1');
+
+      if (flashcardsError) throw flashcardsError;
+
+      // Get learned flashcard IDs for this user
+      const { data: learnedProgress } = await supabase
         .from('user_flashcard_progress')
         .select('flashcard_id')
         .eq('user_id', user.id)
-        .eq('is_learned', false);
+        .eq('is_learned', true);
 
-      const flashcardIds = progressData?.map(p => p.flashcard_id) || [];
+      const learnedIds = new Set(learnedProgress?.map(p => p.flashcard_id) || []);
 
-      let flashcardsData: Flashcard[] = [];
-
-      if (flashcardIds.length === 0) {
-        const { data: allFlashcards } = await supabase
-          .from('flashcards')
-          .select('id, front, example_sentence_1, example_translation_1')
-          .eq('user_id', user.id);
-        
-        flashcardsData = allFlashcards || [];
-      } else {
-        const { data } = await supabase
-          .from('flashcards')
-          .select('id, front, example_sentence_1, example_translation_1')
-          .in('id', flashcardIds);
-        
-        flashcardsData = data || [];
-      }
-
-      // Filter flashcards with example sentences
-      const validFlashcards = flashcardsData.filter(f => f.example_sentence_1);
+      // Filter out learned flashcards and those without example sentences
+      const validFlashcards = (allFlashcards || []).filter(
+        f => !learnedIds.has(f.id) && f.example_sentence_1
+      );
       
       setFlashcards(validFlashcards);
       setTotalQuestions(validFlashcards.length);
