@@ -1,3 +1,4 @@
+// Force rebuild for Vite cache issue
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
