@@ -110,18 +110,31 @@ const Quiz = () => {
 
     // Generate wrong options from other flashcards
     const otherCards = cards.filter(c => c.id !== card.id);
-    let wrongOptions = otherCards
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 3)
-      .map(c => c.front);
+    
+    // Shuffle other cards randomly for this specific question
+    const shuffledOtherCards = [...otherCards].sort(() => Math.random() - 0.5);
+    let wrongOptions = shuffledOtherCards.slice(0, 3).map(c => c.front);
 
-    // If we don't have enough wrong options, generate placeholder words
-    const placeholderWords = ['something', 'anything', 'nothing', 'everything', 'somewhere', 'someone'];
+    // If we don't have enough wrong options, generate random placeholder words
+    const placeholderWords = [
+      'about', 'after', 'again', 'always', 'before', 'begin', 'being', 
+      'better', 'bring', 'build', 'carry', 'change', 'close', 'could',
+      'different', 'every', 'found', 'great', 'happen', 'include',
+      'large', 'leave', 'little', 'might', 'never', 'often', 'other',
+      'place', 'point', 'right', 'small', 'start', 'still', 'thing',
+      'think', 'through', 'under', 'where', 'while', 'world', 'would'
+    ];
+    
+    // Shuffle placeholders and pick random ones
+    const shuffledPlaceholders = [...placeholderWords].sort(() => Math.random() - 0.5);
+    let placeholderIndex = 0;
+    
     while (wrongOptions.length < 3) {
-      const placeholder = placeholderWords[wrongOptions.length];
-      if (!wrongOptions.includes(placeholder) && placeholder !== correctAnswer) {
+      const placeholder = shuffledPlaceholders[placeholderIndex];
+      if (!wrongOptions.includes(placeholder) && placeholder !== correctAnswer.toLowerCase()) {
         wrongOptions.push(placeholder);
       }
+      placeholderIndex++;
     }
 
     // Combine and shuffle all options - ensure exactly 4 options
