@@ -17,9 +17,10 @@ interface FlashcardFormProps {
   onOpenChange: (open: boolean) => void;
   onSubmit: (front: string, back: string, data?: Partial<Flashcard>) => void;
   editCard?: Flashcard | null;
+  prefilledWord?: string;
 }
 
-export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: FlashcardFormProps) => {
+export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard, prefilledWord }: FlashcardFormProps) => {
   const [front, setFront] = useState('');
   const [back, setBack] = useState('');
   const [phonetic, setPhonetic] = useState('');
@@ -71,6 +72,27 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
       setExampleSource3(editCard.exampleSource3 || '');
       setTags(editCard.tags || []);
       setDifficultyLevel(editCard.difficultyLevel || 'intermediate');
+    } else if (prefilledWord) {
+      setFront(prefilledWord);
+      setBack('');
+      setPhonetic('');
+      setChineseDefinition('');
+      setEnglishDefinition('');
+      setSynonyms('');
+      setAntonyms('');
+      setRelatedWords('');
+      setImageUrl('');
+      setExampleSentence1('');
+      setExampleTranslation1('');
+      setExampleSource1('');
+      setExampleSentence2('');
+      setExampleTranslation2('');
+      setExampleSource2('');
+      setExampleSentence3('');
+      setExampleTranslation3('');
+      setExampleSource3('');
+      setTags([]);
+      setDifficultyLevel('intermediate');
     } else {
       setFront('');
       setBack('');
@@ -93,7 +115,7 @@ export const FlashcardForm = ({ open, onOpenChange, onSubmit, editCard }: Flashc
       setTags([]);
       setDifficultyLevel('intermediate');
     }
-  }, [editCard, open]);
+  }, [editCard, prefilledWord, open]);
 
   const handleAutoFill = async () => {
     if (!front.trim()) return;
