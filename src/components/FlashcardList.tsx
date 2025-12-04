@@ -2,6 +2,7 @@ import { Flashcard } from '@/types/flashcard';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface FlashcardListProps {
   flashcards: Flashcard[];
@@ -10,6 +11,8 @@ interface FlashcardListProps {
 }
 
 export const FlashcardList = ({ flashcards, onEdit, onDelete }: FlashcardListProps) => {
+  const navigate = useNavigate();
+
   if (flashcards.length === 0) {
     return (
       <div className="text-center py-12">
@@ -19,10 +22,14 @@ export const FlashcardList = ({ flashcards, onEdit, onDelete }: FlashcardListPro
     );
   }
 
+  const handleCardClick = (card: Flashcard) => {
+    navigate(`/word/${encodeURIComponent(card.front)}`);
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {flashcards.map((card) => (
-        <Card key={card.id} className="hover-scale">
+        <Card key={card.id} className="hover-scale cursor-pointer" onClick={() => handleCardClick(card)}>
           <CardContent className="pt-6">
             <div className="space-y-3">
               <div>
@@ -35,7 +42,7 @@ export const FlashcardList = ({ flashcards, onEdit, onDelete }: FlashcardListPro
               </div>
             </div>
           </CardContent>
-          <CardFooter className="flex gap-2">
+          <CardFooter className="flex gap-2" onClick={(e) => e.stopPropagation()}>
             <Button
               variant="outline"
               size="sm"
