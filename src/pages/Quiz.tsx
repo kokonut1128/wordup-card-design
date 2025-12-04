@@ -110,13 +110,22 @@ const Quiz = () => {
 
     // Generate wrong options from other flashcards
     const otherCards = cards.filter(c => c.id !== card.id);
-    const wrongOptions = otherCards
+    let wrongOptions = otherCards
       .sort(() => Math.random() - 0.5)
       .slice(0, 3)
       .map(c => c.front);
 
-    // Combine and shuffle all options
-    const allOptions = [correctAnswer, ...wrongOptions].sort(() => Math.random() - 0.5);
+    // If we don't have enough wrong options, generate placeholder words
+    const placeholderWords = ['something', 'anything', 'nothing', 'everything', 'somewhere', 'someone'];
+    while (wrongOptions.length < 3) {
+      const placeholder = placeholderWords[wrongOptions.length];
+      if (!wrongOptions.includes(placeholder) && placeholder !== correctAnswer) {
+        wrongOptions.push(placeholder);
+      }
+    }
+
+    // Combine and shuffle all options - ensure exactly 4 options
+    const allOptions = [correctAnswer, ...wrongOptions.slice(0, 3)].sort(() => Math.random() - 0.5);
 
     setCurrentQuestion({
       sentence: blankSentence,
