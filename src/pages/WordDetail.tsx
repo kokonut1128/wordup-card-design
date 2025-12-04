@@ -8,6 +8,16 @@ import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Edit, ExternalLink, Star, Volume2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Flashcard } from '@/types/flashcard';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 const WordDetail = () => {
   const { word } = useParams<{ word: string }>();
@@ -15,6 +25,8 @@ const WordDetail = () => {
   const { toast } = useToast();
   const [flashcard, setFlashcard] = useState<Flashcard | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [targetWord, setTargetWord] = useState('');
 
   useEffect(() => {
     fetchFlashcard();
@@ -114,6 +126,34 @@ const WordDetail = () => {
         description: error.message,
       });
     }
+  };
+
+  const handleWordClick = async (clickedWord: string) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const { data } = await supabase
+        .from('flashcards')
+        .select('id')
+        .eq('user_id', session.user.id)
+        .eq('front', clickedWord)
+        .maybeSingle();
+
+      if (data) {
+        navigate(`/word/${encodeURIComponent(clickedWord)}`);
+      } else {
+        setTargetWord(clickedWord);
+        setShowAddDialog(true);
+      }
+    } catch (error) {
+      console.error('Error checking word:', error);
+    }
+  };
+
+  const handleAddWord = () => {
+    navigate(`/flashcards?newWord=${encodeURIComponent(targetWord)}`);
+    setShowAddDialog(false);
   };
 
   if (loading) {
@@ -241,7 +281,12 @@ const WordDetail = () => {
                 <h3 className="font-semibold text-lg mb-2">同義字</h3>
                 <div className="flex flex-wrap gap-2">
                   {flashcard.synonyms.map((synonym, index) => (
-                    <Badge key={index} variant="secondary">
+                    <Badge 
+                      key={index} 
+                      variant="secondary"
+                      className="cursor-pointer hover:bg-secondary/80 transition-colors"
+                      onClick={() => handleWordClick(synonym)}
+                    >
                       {synonym}
                     </Badge>
                   ))}
@@ -254,7 +299,12 @@ const WordDetail = () => {
                 <h3 className="font-semibold text-lg mb-2">反義字</h3>
                 <div className="flex flex-wrap gap-2">
                   {flashcard.antonyms.map((antonym, index) => (
-                    <Badge key={index} variant="outline">
+                    <Badge 
+                      key={index} 
+                      variant="outline"
+                      className="cursor-pointer hover:bg-accent transition-colors"
+                      onClick={() => handleWordClick(antonym)}
+                    >
                       {antonym}
                     </Badge>
                   ))}
@@ -266,9 +316,14 @@ const WordDetail = () => {
               <div>
                 <h3 className="font-semibold text-lg mb-2">相關詞</h3>
                 <div className="flex flex-wrap gap-2">
-                  {flashcard.relatedWords.map((word, index) => (
-                    <Badge key={index} variant="default">
-                      {word}
+                  {flashcard.relatedWords.map((relatedWord, index) => (
+                    <Badge 
+                      key={index} 
+                      variant="default"
+                      className="cursor-pointer hover:bg-primary/80 transition-colors"
+                      onClick={() => handleWordClick(relatedWord)}
+                    >
+                      {relatedWord}
                     </Badge>
                   ))}
                 </div>
@@ -362,6 +417,21 @@ const WordDetail = () => {
           </CardContent>
         </Card>
       </main>
+
+      <AlertDialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>單字不存在</AlertDialogTitle>
+            <AlertDialogDescription>
+              「{targetWord}」尚未加入單字本，是否要新增此單字？
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={handleAddWord}>新增單字</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

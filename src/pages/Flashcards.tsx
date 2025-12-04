@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // Force rebuild for Vite cache issue
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { FlashcardForm } from '@/components/FlashcardForm';
 import { FlashcardList } from '@/components/FlashcardList';
@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const Flashcards = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
   const [user, setUser] = useState<any>(null);
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
@@ -22,6 +23,7 @@ const Flashcards = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('');
   const [showFilters, setShowFilters] = useState(false);
+  const [prefilledWord, setPrefilledWord] = useState<string>('');
 
   const availableTags = ['商業', '旅遊', '日常', '學術', '科技', '醫療', '法律', '娛樂'];
   const difficultyLevels = [
@@ -29,6 +31,17 @@ const Flashcards = () => {
     { value: 'intermediate', label: '中級' },
     { value: 'advanced', label: '高級' },
   ];
+
+  useEffect(() => {
+    // Check for newWord query parameter
+    const newWord = searchParams.get('newWord');
+    if (newWord) {
+      setPrefilledWord(newWord);
+      setIsFormOpen(true);
+      // Clear the query parameter
+      setSearchParams({});
+    }
+  }, [searchParams, setSearchParams]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -222,6 +235,7 @@ const Flashcards = () => {
     setIsFormOpen(open);
     if (!open) {
       setEditingCard(null);
+      setPrefilledWord('');
     }
   };
 
@@ -367,6 +381,7 @@ const Flashcards = () => {
           onOpenChange={handleOpenChange}
           onSubmit={handleSubmit}
           editCard={editingCard}
+          prefilledWord={prefilledWord}
         />
       </main>
     </div>
