@@ -6,19 +6,23 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Search, BookOpen, ShoppingCart, Newspaper, LogOut, Library, Play, ClipboardList } from 'lucide-react';
-
 const Index = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [user, setUser] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [learnedCount, setLearnedCount] = useState(0);
   const [unlearnedCount, setUnlearnedCount] = useState(0);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     // Check authentication
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({
+      data: {
+        session
+      }
+    }) => {
       if (!session) {
         navigate('/auth');
       } else {
@@ -26,8 +30,11 @@ const Index = () => {
         fetchStats(session.user.id);
       }
     });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: {
+        subscription
+      }
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) {
         navigate('/auth');
       } else {
@@ -35,22 +42,17 @@ const Index = () => {
         fetchStats(session.user.id);
       }
     });
-
     return () => subscription.unsubscribe();
   }, [navigate]);
-
   const fetchStats = async (userId: string) => {
     try {
-      const { data: progress, error } = await supabase
-        .from('user_flashcard_progress')
-        .select('is_learned')
-        .eq('user_id', userId);
-
+      const {
+        data: progress,
+        error
+      } = await supabase.from('user_flashcard_progress').select('is_learned').eq('user_id', userId);
       if (error) throw error;
-
       const learned = progress?.filter(p => p.is_learned).length || 0;
       const unlearned = progress?.filter(p => !p.is_learned).length || 0;
-
       setLearnedCount(learned);
       setUnlearnedCount(unlearned);
     } catch (error) {
@@ -59,26 +61,21 @@ const Index = () => {
       setLoading(false);
     }
   };
-
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchTerm.trim()) {
       toast({
         variant: 'destructive',
-        title: '請輸入單字',
+        title: '請輸入單字'
       });
       return;
     }
-
     try {
       // First, check if word exists in database
-      const { data: existingCard, error: searchError } = await supabase
-        .from('flashcards')
-        .select('*')
-        .eq('user_id', user?.id)
-        .ilike('front', searchTerm.trim())
-        .maybeSingle();
-
+      const {
+        data: existingCard,
+        error: searchError
+      } = await supabase.from('flashcards').select('*').eq('user_id', user?.id).ilike('front', searchTerm.trim()).maybeSingle();
       if (existingCard) {
         // Word exists, navigate to detail page
         navigate(`/word/${encodeURIComponent(searchTerm.trim())}`);
@@ -89,36 +86,30 @@ const Index = () => {
       navigate('/flashcards');
       toast({
         title: '新增單字',
-        description: `找不到 "${searchTerm}"，請建立新的單字卡`,
+        description: `找不到 "${searchTerm}"，請建立新的單字卡`
       });
     } catch (error: any) {
       console.error('Search error:', error);
       toast({
         variant: 'destructive',
         title: '查詢失敗',
-        description: error.message || '無法查詢單字',
+        description: error.message || '無法查詢單字'
       });
     }
   };
-
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate('/auth');
   };
-
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
+    return <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
           <p className="mt-4 text-muted-foreground">載入中...</p>
         </div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -139,12 +130,7 @@ const Index = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSearch} className="flex gap-2">
-              <Input
-                placeholder="輸入英文單字或片語..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-1"
-              />
+              <Input placeholder="輸入英文單字或片語..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="flex-1" />
               <Button type="submit">
                 <Search className="h-4 w-4 mr-2" />
                 搜尋
@@ -157,7 +143,7 @@ const Index = () => {
         <div className="grid grid-cols-2 gap-4 mb-6">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">已學習</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">累積學習數</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-primary">{learnedCount}</div>
@@ -165,7 +151,7 @@ const Index = () => {
           </Card>
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">未學習</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">尚未學習數</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-muted-foreground">{unlearnedCount}</div>
@@ -225,8 +211,6 @@ const Index = () => {
           </Card>
         </div>
       </main>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
