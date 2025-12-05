@@ -180,11 +180,11 @@ const Index = () => {
 
         {/* Main Sections */}
         <div className="grid md:grid-cols-3 gap-4">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate('/flashcards')}>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate('/bookshelf')}>
             <CardHeader>
               <Library className="h-10 w-10 text-primary mb-2" />
               <CardTitle>我的書櫃</CardTitle>
-              <CardDescription>管理你的單字卡集</CardDescription>
+              <CardDescription>依標籤分類管理你的單字書</CardDescription>
             </CardHeader>
           </Card>
 

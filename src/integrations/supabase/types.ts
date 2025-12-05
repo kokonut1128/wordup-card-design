@@ -139,6 +139,84 @@ export type Database = {
           },
         ]
       }
+      word_book_cards: {
+        Row: {
+          added_at: string
+          book_id: string
+          flashcard_id: string
+          id: string
+          position: number | null
+        }
+        Insert: {
+          added_at?: string
+          book_id: string
+          flashcard_id: string
+          id?: string
+          position?: number | null
+        }
+        Update: {
+          added_at?: string
+          book_id?: string
+          flashcard_id?: string
+          id?: string
+          position?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "word_book_cards_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "word_books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "word_book_cards_flashcard_id_fkey"
+            columns: ["flashcard_id"]
+            isOneToOne: false
+            referencedRelation: "flashcards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      word_books: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_purchased: boolean
+          price: number | null
+          tag: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_purchased?: boolean
+          price?: number | null
+          tag?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_purchased?: boolean
+          price?: number | null
+          tag?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

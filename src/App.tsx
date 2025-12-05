@@ -12,6 +12,8 @@ const Study = lazy(() => import("./pages/Study"));
 const Review = lazy(() => import("./pages/Review"));
 const Quiz = lazy(() => import("./pages/Quiz"));
 const WordDetail = lazy(() => import("./pages/WordDetail"));
+const Bookshelf = lazy(() => import("./pages/Bookshelf"));
+const BookDetail = lazy(() => import("./pages/BookDetail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -31,6 +33,8 @@ const App = () => (
             <Route path="/review" element={<Review />} />
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/word/:word" element={<WordDetail />} />
+            <Route path="/bookshelf" element={<Bookshelf />} />
+            <Route path="/book/:bookId" element={<BookDetail />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
