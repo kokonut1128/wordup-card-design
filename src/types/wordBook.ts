@@ -2,11 +2,11 @@ export interface WordBook {
   id: string;
   user_id: string;
   title: string;
-  description?: string;
-  cover_image_url?: string;
-  tag: string;
+  description: string | null;
+  cover_image_url: string | null;
+  tag: string | null;
   is_purchased: boolean;
-  price?: number;
+  price: number | null;
   created_at: string;
   updated_at: string;
   card_count?: number;
